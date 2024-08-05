@@ -3,18 +3,21 @@
     <MyNavbar />
     <div class="p-4">
       <div v-if="cards.length === 0">Loading...</div>
-      <MyCard
-        v-for="(card, index) in cards"
-        :key="index"
-        :title="card.title"
-        :date="card.date"
-        :isDark="card.isDark"
-        :reStyle="() => toggleStyle(index)"
-      />
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+        <MyCard
+          v-for="(card, index) in cards"
+          :key="index"
+          :title="card.title"
+          :date="card.date"
+          :isDark="card.isDark"
+          :reStyle="() => toggleStyle(index)"
+        />
+      </div>
     </div>
     <MyFooter />
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import MyNavbar from './components/MyNavbar.vue'
