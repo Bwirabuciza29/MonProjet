@@ -1,24 +1,26 @@
 <template>
-  <div :class="['p-4 border rounded shadow', themeClass]">
+  <div :class="cardClass">
     <h2 class="text-xl font-bold">{{ title }}</h2>
     <p>{{ formattedDate }}</p>
+    <button @click="reStyle" class="mt-2 p-2 bg-blue-500 text-white rounded">Toggle Style</button>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   title: String,
   date: String,
-  theme: String
+  reStyle: Function
 })
 
-const themeClass = computed(() => {
-  return props.theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'
-})
+const cardClass = ref('bg-white p-4 rounded shadow')
 
 const formattedDate = computed(() => {
   return new Date(props.date).toLocaleDateString()
 })
 </script>
+
+<style scoped>
+</style>

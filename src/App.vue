@@ -1,20 +1,16 @@
 <template>
-  <div class="flex flex-col min-h-screen">
+  <div>
     <MyNavbar />
-    <main class="flex-grow p-4">
-      <div class="grid gap-4">
-        <MyCard
-          v-for="(card, index) in cards"
-          :key="index"
-          :title="card.title"
-          :date="card.date"
-          :theme="theme"
-        />
-      </div>
-      <button class="mt-4 py-2 px-4 bg-blue-500 text-white rounded" @click="reStyle">
-        Toggle Theme
-      </button>
-    </main>
+    <div class="p-4">
+      <div v-if="cards.length === 0">Loading...</div>
+      <MyCard
+        v-for="(card, index) in cards"
+        :key="index"
+        :title="card.title"
+        :date="card.date"
+        :reStyle="toggleStyle"
+      />
+    </div>
     <MyFooter />
   </div>
 </template>
@@ -24,31 +20,34 @@ import { ref, onMounted } from 'vue'
 import MyNavbar from './components/MyNavbar.vue'
 import MyFooter from './components/MyFooter.vue'
 import MyCard from './components/MyCard.vue'
-import useFetch from './composables/useFetch'
 
-const theme = ref('light')
-
-const reStyle = () => {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
-
-const { data } = useFetch('https://cmsresourcematters.witoxr.studio/items/publications')
 const cards = ref([])
 
-onMounted(() => {
-  if (data.value) {
-    cards.value = data.value.map((item) => ({
-      title: item.title,
-      date: item.date_created
+async function fetchPublications() {
+  try {
+    const response = await fetch('https://cms-resourcematters.witoxr.studio/items/publications')
+    const data = await response.json()
+    cards.value = data.data.map((publication) => ({
+      title: publication.title,
+      date: publication.date_created
     }))
+  } catch (error) {
+    console.error('Error fetching publications:', error)
   }
-})
-</script>
-<style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
+
+function toggleStyle(cardIndex) {
+  const card = cards.value[cardIndex]
+  card.cardClass =
+    card.cardClass === 'bg-white p-4 rounded shadow'
+      ? 'bg-gray-800 text-white p-4 rounded shadow'
+      : 'bg-white text-black p-4 rounded shadow'
+  cards.value[cardIndex] = { ...card }
+}
+
+onMounted(fetchPublications)
+</script>
+
+<style>
+@import './assets/main.css';
 </style>
