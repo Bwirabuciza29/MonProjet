@@ -8,13 +8,13 @@
         :key="index"
         :title="card.title"
         :date="card.date"
-        :reStyle="toggleStyle"
+        :isDark="card.isDark"
+        :reStyle="() => toggleStyle(index)"
       />
     </div>
     <MyFooter />
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import MyNavbar from './components/MyNavbar.vue'
@@ -29,7 +29,8 @@ async function fetchPublications() {
     const data = await response.json()
     cards.value = data.data.map((publication) => ({
       title: publication.title,
-      date: publication.date_created
+      date: publication.date_created,
+      isDark: false
     }))
   } catch (error) {
     console.error('Error fetching publications:', error)
@@ -37,17 +38,8 @@ async function fetchPublications() {
 }
 
 function toggleStyle(cardIndex) {
-  const card = cards.value[cardIndex]
-  card.cardClass =
-    card.cardClass === 'bg-white p-4 rounded shadow'
-      ? 'bg-gray-800 text-white p-4 rounded shadow'
-      : 'bg-white text-black p-4 rounded shadow'
-  cards.value[cardIndex] = { ...card }
+  cards.value[cardIndex].isDark = !cards.value[cardIndex].isDark
 }
 
 onMounted(fetchPublications)
 </script>
-
-<style>
-@import './assets/main.css';
-</style>
