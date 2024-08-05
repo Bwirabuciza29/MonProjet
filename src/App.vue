@@ -39,8 +39,16 @@ onMounted(() => {
   if (data.value) {
     cards.value = data.value.map((item) => ({
       title: item.title,
-      date: item.date
+      date: item.date_created
     }))
   }
 })
 </script>
+<style scoped>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>

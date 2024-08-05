@@ -2,15 +2,16 @@ import { ref } from 'vue'
 
 export default function useFetch(url) {
   const data = ref(null)
+  const error = ref(null)
 
   fetch(url)
     .then((response) => response.json())
     .then((json) => {
-      data.value = json
+      data.value = json.data // assuming the response structure has a "data" field
     })
     .catch((err) => {
-      console.error('Fetch error:', err)
+      error.value = err
     })
 
-  return { data }
+  return { data, error }
 }
